@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "chrome-aws-lambda": "^5.5.0",
+    "handlebars": "^4.7.6",
+    "pug": "^3.0.0",
+    "puppeteer": "^7.0.1",
+    "puppeteer-core": "^7.0.1",
+    "serverless-apigw-binary": "^0.4.4",
+    "serverless-offline": "^6.8.0"
+  }
+}
