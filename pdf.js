@@ -10,10 +10,16 @@ const s3 = new AWS.S3();
 
 module.exports.pdf = async (event, context, callBack) => {
 
+
+  //Please construct URL / query string here.
+  const pdfPreviewUrl = 'https://www.growlibro.com';
+
+  //For local use:
   const data = {
-    title: " Pdf generation using puppeteer",
-    text: " Handlebar is awesome!"
+    title: "Ako si Darna!",
+    text: "Ang pinakabayot sa tibuok kalibutan"
   }
+
   const executablePath = event.isOffline
     ? "./node_modules/puppeteer/.local-chromium/mac-674921/chrome-mac/Chromium.app/Contents/MacOS/Chromium"
     : await chromium.executablePath;
@@ -31,9 +37,11 @@ module.exports.pdf = async (event, context, callBack) => {
       headless: chromium.headless
     });
 
-    const page = await browser.newPage();
 
-    page.setContent(html);
+    const page = await browser.newPage();
+    await page.goto(pdfPreviewUrl);
+
+    // page.setContent(html);
 
     const pdf = await page.pdf({
       format: "A4",
@@ -41,7 +49,7 @@ module.exports.pdf = async (event, context, callBack) => {
       margin: { top: "1cm", right: "1cm", bottom: "1cm", left: "1cm" }
     });
 
-    // TODO: Response with PDF (or error if something went wrong )
+    // Response with PDF (or error if something went wrong )
     const response = {
       headers: {
         "Content-type": "application/pdf",
@@ -52,7 +60,7 @@ module.exports.pdf = async (event, context, callBack) => {
       isBase64Encoded: true
     };
 
-    const output_filename = 'pdf-testing.pdf';
+    const output_filename = 'pdf-testing-uri-gl.pdf';
 
     const s3Params = {
       Bucket: "growlibro-pdf",

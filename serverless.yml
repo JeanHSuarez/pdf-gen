@@ -61,9 +61,9 @@ package:
 
   exclude:
     - node_modules/puppeteer/**
+    - '!node_modules/handlebars/**'
     - '!node_modules/chrome-aws-lambda/**'
     - '!node_modules/puppeteer-core/**'
-    - '!node_modules/handlebars/**'
     - '!node_modules/pug/**'
 
 
@@ -76,7 +76,7 @@ functions:
     events:
       - http:
           path: pdf
-          method: post
+          method: get
           cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
