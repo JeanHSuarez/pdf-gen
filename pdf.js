@@ -16,7 +16,9 @@ module.exports.pdf = async (event, context, callBack) => {
 
   //https://open.growlibro.com/invoice/569b7b30cfb940e678a4a6aff2ebdb58
   
-  const pdfPreviewUrl = 'https://open.growlibro.com/${event.params.querystring.doctype}/${event.params.querystring.uuid}';
+  // const pdfPreviewUrl = 'https://open.growlibro.com/invoice/5db5f5c532f9669b47180e391117e554'
+
+  const pdfPreviewUrl = `https://open.growlibro.com/${event.params.querystring.doctype}/${event.params.querystring.uuid}`
 
   //For local use:
   const data = {
@@ -61,7 +63,7 @@ module.exports.pdf = async (event, context, callBack) => {
       statusCode: 200,
       // body: {event, context},
       body: {url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}`},
-    // body: JSON.stringify({url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}`}),
+    // body: JSON.stringify({url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}`, pdfPreviewUrl: pdfPreviewUrl}),
       isBase64Encoded: false
     };
 
