@@ -1,3 +1,4 @@
+
 "use strict";
 const chromium = require("chrome-aws-lambda");
 var AWS = require("aws-sdk");
@@ -12,7 +13,10 @@ module.exports.pdf = async (event, context, callBack) => {
 
 
   //Please construct URL / query string here.
-  const pdfPreviewUrl = 'https://www.growlibro.com';
+
+  //https://open.growlibro.com/invoice/569b7b30cfb940e678a4a6aff2ebdb58
+  
+  const pdfPreviewUrl = 'https://open.growlibro.com/${event.params.querystring.doctype}/${event.params.querystring.uuid}';
 
   //For local use:
   const data = {
@@ -48,36 +52,40 @@ module.exports.pdf = async (event, context, callBack) => {
       printBackground: true,
       margin: { top: "1cm", right: "1cm", bottom: "1cm", left: "1cm" }
     });
-
+    const output_filename = `${new Date().getTime()}`;
     // Response with PDF (or error if something went wrong )
     const response = {
       headers: {
-        "Content-type": "application/pdf",
-        "content-disposition": "attachment; filename=test.pdf"
+        "Content-type": "application/json",
       },
       statusCode: 200,
-      body: pdf.toString("base64"),
-      isBase64Encoded: true
+      // body: {event, context},
+      body: {url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}.pdf`},
+    // body: JSON.stringify({url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}`}),
+      isBase64Encoded: false
     };
 
-    const output_filename = 'pdf-testing-uri-gl.pdf';
 
+    // 
+    
     const s3Params = {
       Bucket: "growlibro-pdf",
       Key: `public/pdfs/${output_filename}`,
       Body: pdf,
       ContentType: "application/pdf",
-      ServerSideEncryption: "AES256"
+      ServerSideEncryption: "AES256",
+      ACL: 'public-read'
     };
 
-    s3.putObject(s3Params, err => {
+    await s3.putObject(s3Params, err => {
       if (err) {
         console.log("err", err);
-        return callBack(null, { error });
+        return callBack(null, { error });  
       }
     });
 
-    context.succeed(response);
+    // context.succeed(response);
+    callBack(null, response);
 
   } catch (error) {
     return context.fail(error);
