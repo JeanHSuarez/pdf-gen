@@ -52,7 +52,7 @@ module.exports.pdf = async (event, context, callBack) => {
       printBackground: true,
       margin: { top: "1cm", right: "1cm", bottom: "1cm", left: "1cm" }
     });
-    const output_filename = `${new Date().getTime()}`;
+    const output_filename = `${new Date().getTime()}.pdf`;
     // Response with PDF (or error if something went wrong )
     const response = {
       headers: {
@@ -60,7 +60,7 @@ module.exports.pdf = async (event, context, callBack) => {
       },
       statusCode: 200,
       // body: {event, context},
-      body: {url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}.pdf`},
+      body: {url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}`},
     // body: JSON.stringify({url: `https://growlibro-pdf.s3.amazonaws.com/public/pdfs/${output_filename}`}),
       isBase64Encoded: false
     };
